@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class AccountService {
 
     @Autowired
-    AccountRepository accountRepository;
+    public AccountRepository accountRepository;
     @Autowired
     UserRepository userRepository;
 
@@ -29,21 +29,29 @@ public class AccountService {
         return accountDetails.get();
     }
 
-    public Status updateAmount(User user, Integer amount, Boolean add){
+    public Status updateAmount(Integer userId, Integer amount, Boolean add){
         AtomicReference<Status> status = new AtomicReference<>(Status.FAILURE);
-        Optional<User> currUser = userRepository.findById(user.getId());
+        Optional<User> currUser = userRepository.findById(userId);
 
         currUser.ifPresent(u->{
-            List<Account> accounts= accountRepository.findAll();
+            Optional<Account> currAcc = accountRepository.findById(u.getAccountId());
+            currAcc.ifPresent(account->{
+                account.setAmount(add? account.getAmount()+amount:account.getAmount()-amount);
+                accountRepository.save(account);
+                status.set(Status.SUCCESS);
+            });
 
-            for(Account account : accounts){
-                if(account.getId()==u.getAccountId()){
-                    account.setAmount(add? account.getAmount()+amount:account.getAmount()-amount);
-                    accountRepository.save(account);
-                    status.set(Status.SUCCESS);
-                    break;
-                }
-            }
+
+//            List<Account> accounts= accountRepository.findAll();
+//
+//            for(Account account : accounts){
+//                if(account.getId()==u.getAccountId()){
+//                    account.setAmount(add? account.getAmount()+amount:account.getAmount()-amount);
+//                    accountRepository.save(account);
+//                    status.set(Status.SUCCESS);
+//                    break;
+//                }
+//            }
         });
 
         return status.get();

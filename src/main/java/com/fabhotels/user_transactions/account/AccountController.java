@@ -17,7 +17,7 @@ public class AccountController {
     }
 
     @PostMapping("/account/amount")
-    private Status updateAmount(@Validated @RequestBody User user, Integer amount,Boolean add){
+    private Status updateAmount(@Validated @RequestBody Integer user, Integer amount,Boolean add){
         return accountService.updateAmount(user,amount,add);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +24,12 @@ public class UserController {
     }
 
     @PostMapping("/user/logout")
-    public Status logUserOut(@Validated @RequestBody User user) {
-        return userService.logOut(user);
+    public Status logUserOut(@Validated @RequestBody Integer userId) {
+        return userService.logOut(userId);
     }
 
     @GetMapping("/user")
-    public Optional<User> getUser(@Validated @RequestParam Integer id){
+    public HashMap<String,String> getUser(@Validated @RequestParam Integer id){
         return userService.getUser(id);
     }
 

@@ -1,8 +1,7 @@
 package com.fabhotels.user_transactions.user;
 
 import com.fabhotels.user_transactions.account.Account;
-import com.fabhotels.user_transactions.account.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fabhotels.user_transactions.account.AccountService;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -22,8 +21,6 @@ public class User {
 
     private Boolean loggedIn;
 
-    @Autowired
-    AccountRepository accountRepository;
 
     @Id
     private Integer accountId;
@@ -38,7 +35,8 @@ public class User {
         this.loggedIn = false;
 
         Account account = new Account(0);
-        accountRepository.save(account);
+        AccountService accountService = new AccountService();
+        accountService.accountRepository.save(account);
         this.accountId = account.getId();
     }
 
