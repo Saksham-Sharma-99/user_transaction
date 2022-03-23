@@ -11,18 +11,24 @@ import java.util.Objects;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID",unique = true,nullable = false)
     private Integer id;
 
+    @Column(name="NAME")
     private String name;
 
+    @Column(name="EMAIL",unique = true)
     private String email;
 
+    @Column(name="PASSWORD")
     private String password;
 
+    @Column(name="LOGGED_IN")
     private Boolean loggedIn;
 
 
     @Id
+    @Column(name="ACCOUNT_ID")
     private Integer accountId;
 
     public User() {

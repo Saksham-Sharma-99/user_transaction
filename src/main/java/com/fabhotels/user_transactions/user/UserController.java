@@ -14,13 +14,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/user/register")
-    public Status registerUser(@Validated @RequestBody User newUser){
-        return userService.registerUser(newUser);
+    public Status registerUser(@RequestParam String name,@RequestParam String email,@RequestParam String password){
+        return userService.registerUser(name,email,password);
     }
 
     @PostMapping("/user/login")
-    public Status loginUser(@Validated @RequestBody User user){
-        return userService.loginUser(user);
+    public Status loginUser(@RequestParam String email, @RequestParam String name){
+        return userService.loginUser(name,email);
     }
 
     @PostMapping("/user/logout")
@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    public Status updateUser(@Validated @RequestBody User user){
-        return userService.updateUser(user);
+    public Status updateUser(@RequestParam Integer userId , @RequestParam HashMap<String,String> data){
+        return userService.updateUser(userId,data);
     }
 }
 

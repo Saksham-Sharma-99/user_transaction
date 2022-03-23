@@ -13,29 +13,49 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public Status registerUser(User newUser){
-        List<User> users = userRepository.findAll();
+    public Status registerUser(String name, String email, String password){
+//        List<User> users = userRepository.findAll();
+//
+//        for(User user: users){
+//            if (user.equals(newUser)) {
+//                System.out.println("User Already exists!");
+//                return Status.USER_ALREADY_EXISTS;
+//            }
+//        }
+//
+//        userRepository.save(newUser);
 
-        for(User user: users){
-            if (user.equals(newUser)) {
-                System.out.println("User Already exists!");
-                return Status.USER_ALREADY_EXISTS;
-            }
+        User user = userRepository.findByEmail(email);
+
+        if(user!=null){
+            System.out.println("User Already exists!");
+            return Status.USER_ALREADY_EXISTS;
         }
 
+        User newUser = new User(name,email,password);
+
         userRepository.save(newUser);
+
         return Status.SUCCESS;
     }
 
-    public Status loginUser(User user){
-        List<User> users = userRepository.findAll();
-        for (User other : users) {
-            if (other.equals(user)) {
-                user.setLoggedIn(true);
-                userRepository.save(user);
-                return Status.SUCCESS;
-            }
-        }
+    public Status loginUser(String email,String password){
+//        List<User> users = userRepository.findAll();
+//        for (User other : users) {
+//            if (other.equals(user)) {
+//                user.setLoggedIn(true);
+//                userRepository.save(user);
+//                return Status.SUCCESS;
+//            }
+//        }
+
+        User user = userRepository.findByEmail(email);
+         if(password == user.getPassword()){
+             user.setLoggedIn(true);
+             userRepository.save(user);
+             return Status.SUCCESS;
+         }
+
         return Status.FAILURE;
     }
 
@@ -70,13 +90,13 @@ public class UserService {
         return response;
     }
 
-    public Status updateUser(User user){
-        Optional<User> currUser = userRepository.findById(user.getId());
+    public Status updateUser(Integer userId,HashMap<String,String> data){
+        Optional<User> currUser = userRepository.findById(userId);
 
         currUser.ifPresent(currentUser->{
-            currentUser.setName(user.getName()!=null ? user.getName() : currentUser.getName());
-            currentUser.setEmail(user.getEmail()!=null ? user.getEmail() : currentUser.getEmail());
-            currentUser.setPassword((user.getPassword()!=null?user.getPassword():currentUser.getPassword()));
+            currentUser.setName(data.containsKey("name") ? data.get("name") : currentUser.getName());
+            currentUser.setEmail(data.containsKey("email") ? data.get("email") : currentUser.getEmail());
+            currentUser.setPassword((data.containsKey("password")? data.get("password"):currentUser.getPassword()));
             userRepository.save(currentUser);
         });
 
